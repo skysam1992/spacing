@@ -1,0 +1,15 @@
+<div>
+  <svg [attr.width]="svgData.width" [attr.height]="svgData.height" style="border: 1px solid red">
+    <polygon
+      *ngFor="let item of svgData.items"
+      [id]="'spacing-polygon:' + item.id"
+      [attr.fill]="item.fill"
+      [attr.stroke]="item.stroke"
+      [attr.stroke-width]="item.strokeWidth"
+      [attr.points]="item.points.join(' ')"
+      (mouseenter)="mouseenter(item)"
+      (mousedown)="mousedown(item)" 
+      (mouseup)="mouseup(item)"
+      (mouseleave)="mouseleave(item)"/>
+  </svg>
+</div>

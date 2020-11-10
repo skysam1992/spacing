@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'SpacingPlugin';
+  testMargin = '0px 0px 0px 0px';
+  testPadding = '10px 10px 10px 10px';
+  OnInit(): void {
+
+  }
 }

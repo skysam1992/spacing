@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SpacingPluginComponent } from './spacing-plugin/spacing-plugin.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SpacingPluginComponent
   ],
   imports: [
     BrowserModule,
