@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  align-items: center;
+  &-svg {
+    position: relative;
+    display: flex;
+    &-input {
+      position: absolute;
+      text-align: center;
+    }
+  }
+  &-reset {
+    margin-left: 50px;
+  }
+}

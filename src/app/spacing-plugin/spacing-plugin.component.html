@@ -1,15 +1,25 @@
-<div>
-  <svg [attr.width]="svgData.width" [attr.height]="svgData.height" style="border: 1px solid red">
-    <polygon
-      *ngFor="let item of svgData.items"
-      [id]="'spacing-polygon:' + item.id"
-      [attr.fill]="item.fill"
-      [attr.stroke]="item.stroke"
-      [attr.stroke-width]="item.strokeWidth"
-      [attr.points]="item.points.join(' ')"
-      (mouseenter)="mouseenter(item)"
-      (mousedown)="mousedown(item)" 
-      (mouseup)="mouseup(item)"
-      (mouseleave)="mouseleave(item)"/>
-  </svg>
+<div class="container">
+  <div class="container-svg">
+    <svg [attr.width]="svgData.width" [attr.height]="svgData.height">
+      <polygon
+        style="touch-action: none"
+        *ngFor="let item of svgData.polygons"
+        [id]="'spacing-polygon:' + item.id"
+        [attr.fill]="item.fill"
+        [attr.stroke]="item.stroke"
+        [attr.stroke-width]="item.strokeWidth"
+        [attr.points]="item.points.join(' ')"
+        (mouseenter)="mouseenter(item)"
+        (mousedown)="mousedown(item)" 
+        (mouseup)="mouseup(item)"
+        (mouseleave)="mouseleave(item)"/>
+    </svg>
+    <input
+      class="container-svg-input"
+      *ngFor="let item of svgData.inputs; let i = index"
+      [ngStyle]="{width: item.width, height: item.height, left:item.left, top:item.top}"
+      [(ngModel)]="adjustData[item.value]"
+    />
+  </div>
+  <button class="container-reset" (click)="reset()">重置</button>
 </div>

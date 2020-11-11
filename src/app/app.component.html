@@ -1,12 +1,21 @@
 <app-spacing-plugin
   svgWidth="600"
   svgHeight="300"
-  [(adjustMargin)]="testMargin"
-  [(adjustPadding)]="testPadding"
+  [(adjustData)]="adjustData"
 ></app-spacing-plugin>
 
-<div class="outside">
-  <div class="test" [ngStyle]="{margin: testMargin, padding: testPadding}">
-    <div class="inside"></div>
+<div class="container">
+  <div class="outside">
+    <div class="test"
+      [style.margin-top.px] = "adjustData.topMargin"
+      [style.margin-right.px] = "adjustData.rightMargin"
+      [style.margin-bottom.px] = "adjustData.bottomMargin"
+      [style.margin-left.px] = "adjustData.leftMargin"
+      [style.padding-top.px] = "adjustData.topPadding"
+      [style.padding-right.px] = "adjustData.rightPadding"
+      [style.padding-bottom.px] = "adjustData.bottomPadding"
+      [style.padding-left.px] = "adjustData.leftPadding">
+      <div class="inside"></div>
+    </div>
   </div>
 </div>

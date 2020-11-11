@@ -1,18 +1,38 @@
 import { Component, OnInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 import interact from 'interactjs';
 
+export interface SpacesProperty {
+  topMargin: number,
+  rightMargin: number,
+  bottomMargin: number,
+  leftMargin: number,
+  topPadding: number,
+  rightPadding: number,
+  bottomPadding: number,
+  leftPadding: number
+}
+
 interface SvgData {
   width: number;
   height: number;
-  items: Polygon[];
+  polygons: PolygonData[];
+  inputs: InputData[];
 }
 
-interface Polygon {
+interface PolygonData {
   id: number;
   fill: string;
   stroke: string;
   strokeWidth: number;
   points: string[]
+}
+
+interface InputData {
+  width: string;
+  height: string;
+  left: string;
+  top: string;
+  value: string;
 }
 
 @Component({
@@ -23,31 +43,45 @@ interface Polygon {
 
 export class SpacingPluginComponent implements OnInit {
 
-  @Input() svgWidth: number;
-  @Input() svgHeight: number;
+  @Input() svgWidth: number = 400;
+  @Input() svgHeight: number = 200;
 
-  @Input() adjustMargin: string;
-  @Output() adjustMarginChange = new EventEmitter();
+  @Input() adjustData: SpacesProperty;
+  @Output() adjustDataChange = new EventEmitter();
 
-  @Input() adjustPadding: string;
-  @Output() adjustPaddingChange = new EventEmitter();
+  svgData: SvgData;
+  tempNormalColor: string;
+  selectedColor: string = 'gainsboro';
+  highlightColor: string = 'ghostwhite';
+
+  polygonStroke = 'black';
+  polygonStrokeWidth = 1;
+  polygonFill = {
+    centerFill: 'red',
+    topPaddingFill: 'blue',
+    rightPaddingFill: 'blue',
+    bottomPaddingFill: 'blue',
+    leftPaddingFill: 'blue',
+    topMarginFill: 'green',
+    rightMarginFill: 'green',
+    bottomMarginFill: 'green',
+    leftMarginFill: 'green'
+  }
+
+  // 记录原始数值用于重置
+  originalAdjustData: SpacesProperty;
 
   constructor(
     private readonly elementRef: ElementRef,
   ) {}
 
-  svgData: SvgData;
-  tempNormalColor: string;
-
-  tempAdjustMargin: string;
-  tempAdjustPadding: string;
-
   ngOnInit(): void {
-    this.initStyle()
+    this.initStyle();
+    this.originalAdjustData = JSON.parse(JSON.stringify(this.adjustData));
   }
 
   ngAfterViewInit(): void {
-    const divs: any[] = this.elementRef.nativeElement.querySelectorAll('polygon');    
+    const divs: HTMLElement[] = this.elementRef.nativeElement.querySelectorAll('polygon');    
     divs.forEach((div: any) => {
       this.initDrag(div);
     });
@@ -56,25 +90,84 @@ export class SpacingPluginComponent implements OnInit {
   initDrag(div:HTMLElement): void {
     const elementControl = interact(div);
     const that = this;
-    const padding = that.tempAdjustPadding ? that.tempAdjustPadding.split(' ') : that.adjustPadding.split(' ');
+    const sensitivity = 1;
     elementControl.draggable({
       listeners: {
-        start() {
-          that.tempAdjustMargin = that.adjustMargin;
-          that.tempAdjustPadding = that.adjustPadding;
-        },
         move(event) {
-          const { y0, client, target } = event;
+          const {target, delta } = event;
           switch (target.id) {
-            case 'spacing-polygon:'+1:
-              let paddingTop = Number(padding[0].split('px')[0]);
-              paddingTop = paddingTop + (client.y - y0);
-              if (paddingTop < 0) paddingTop = 0;
-              padding[0] = paddingTop + 'px';
-              that.adjustPadding = padding.join(' ');
-              that.adjustPaddingChange.emit(that.adjustPadding);
+            case 'spacing-polygon:1': // topPadding
+              if (delta.y > 0) {
+                that.adjustData.topPadding += sensitivity;
+              } else {
+                if (that.adjustData.topPadding > 0) {
+                  that.adjustData.topPadding -= sensitivity;
+                }
+              }
               break;
-          
+            case 'spacing-polygon:2': // topMargin
+              if (delta.y > 0) {
+                that.adjustData.topMargin += sensitivity;
+              } else {
+                if (that.adjustData.topMargin > 0) {
+                  that.adjustData.topMargin -= sensitivity;
+                }
+              }
+              break;
+            case 'spacing-polygon:3': // bottomPadding
+              if (delta.y > 0) {
+                that.adjustData.bottomPadding += sensitivity;
+              } else {
+                if (that.adjustData.bottomPadding > 0) {
+                  that.adjustData.bottomPadding -= sensitivity;
+                }
+              }
+              break;
+            case 'spacing-polygon:4': // bottomMargin
+              if (delta.y > 0) {
+                that.adjustData.bottomMargin += sensitivity;
+              } else {
+                if (that.adjustData.bottomMargin > 0) {
+                  that.adjustData.bottomMargin -= sensitivity;
+                }
+              }
+              break;
+            case 'spacing-polygon:5': // leftPadding
+              if (delta.x > 0) {
+                that.adjustData.leftPadding += sensitivity;
+              } else {
+                if (that.adjustData.leftPadding > 0) {
+                  that.adjustData.leftPadding -= sensitivity;
+                }
+              }
+              break;
+            case 'spacing-polygon:6': // leftMargin
+              if (delta.x > 0) {
+                that.adjustData.leftMargin += sensitivity;
+              } else {
+                if (that.adjustData.leftMargin > 0) {
+                  that.adjustData.leftMargin -= sensitivity;
+                }
+              }
+              break;
+            case 'spacing-polygon:7': // rightPadding
+              if (delta.x > 0) {
+                that.adjustData.rightPadding += sensitivity;
+              } else {
+                if (that.adjustData.rightPadding > 0) {
+                  that.adjustData.rightPadding -= sensitivity;
+                }
+              }
+              break;
+            case 'spacing-polygon:8': // rightMargin
+              if (delta.x > 0) {
+                that.adjustData.rightMargin += sensitivity;
+              } else {
+                if (that.adjustData.rightMargin > 0) {
+                  that.adjustData.rightMargin -= sensitivity;
+                }
+              }
+              break;
             default:
               break;
           }
@@ -85,24 +178,33 @@ export class SpacingPluginComponent implements OnInit {
 
   initStyle(): void {
     // svg 宽高
-    const width = this.svgWidth;
-    const height = this.svgHeight;
+    const width: number = this.svgWidth;
+    const height: number = this.svgHeight;
     // 内部矩形宽高
-    const innerWidth = width / 3;
-    const innerHeight = height / 3;
-    const innerLeft = (width - innerWidth) / 2;
-    const innerTop = (height - innerHeight) / 2;
+    const innerWidth: number = width / 3;
+    const innerHeight: number = height / 3;
+    const innerLeft: number = (width - innerWidth) / 2;
+    const innerTop: number = (height - innerHeight) / 2;
     // 上下梯形高度
-    const topTrapezoiHeight = innerTop / 2;
+    const topTrapezoiHeight: number = innerTop / 2;
     // 左右梯形高度
-    const leftTrapezoiHeight = innerLeft / 2;
+    const leftTrapezoiHeight: number = innerLeft / 2;
+
+    // 输入框的宽高（输入框会有 上下1padding 左右2padding 2边框 所以真实宽度为设置的宽度加8 高度加6 参与计算时需注意）
+    const inputWidth: number = 30;
+    const inputHeight: number = 10;
     
+    const polygonFill = this.polygonFill;
+    const stroke = this.polygonStroke;
+    const strokeWidth = this.polygonStrokeWidth
+
+    // 点连接顺序 左上->右上->右下->左下->左上
     // 中间矩形
-    const centerPolygon:Polygon = {
+    const centerPolygon:PolygonData = {
       id: 0,
-      fill: 'red',
-      stroke: 'black',
-      strokeWidth: 0,
+      fill: polygonFill.centerFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         `${innerLeft},${innerTop}`,
         `${innerLeft + innerWidth},${innerTop}`,
@@ -113,11 +215,11 @@ export class SpacingPluginComponent implements OnInit {
     }
 
     // 上 内边距 梯形
-    const topPaddingPolygon:Polygon = {
+    const topPaddingPolygon:PolygonData = {
       id: 1,
-      fill: 'blue',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.topPaddingFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         `${leftTrapezoiHeight},${topTrapezoiHeight}`,
         `${innerLeft + innerWidth + leftTrapezoiHeight},${topTrapezoiHeight}`,
@@ -126,13 +228,22 @@ export class SpacingPluginComponent implements OnInit {
         `${leftTrapezoiHeight},${topTrapezoiHeight}`
       ]
     }
+  
+    // 上 内边距 输入框
+    const topPaddingInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${(width - (inputWidth + 8)) / 2}px`,
+      top: `${topTrapezoiHeight + (topTrapezoiHeight - (inputHeight + 6)) / 2}px`,
+      value: 'topPadding'
+    }
 
     // 上 外边距 梯形
-    const topMarginPolygon:Polygon = {
+    const topMarginPolygon:PolygonData = {
       id: 2,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.topMarginFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         `${0},${0}`,
         `${width},${0}`,
@@ -142,12 +253,21 @@ export class SpacingPluginComponent implements OnInit {
       ]
     }
 
+    // 上 外边距 输入框
+    const topMarginInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${(width - (inputWidth + 8)) / 2}px`,
+      top: `${(topTrapezoiHeight - (inputHeight + 6)) / 2}px`,
+      value: 'topMargin'
+    }
+
     // 下 内边距 梯形
-    const bottomPaddingPolygon:Polygon = {
+    const bottomPaddingPolygon:PolygonData = {
       id: 3,
-      fill: 'blue',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.bottomPaddingFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         centerPolygon.points[3],
         centerPolygon.points[2],
@@ -157,12 +277,21 @@ export class SpacingPluginComponent implements OnInit {
       ]
     }
 
+    // 下 内边距 输入框
+    const bottomPaddingInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${(width - (inputWidth + 8)) / 2}px`,
+      top: `${innerHeight + innerTop + (topTrapezoiHeight - (inputHeight + 6)) / 2}px`,
+      value: 'bottomPadding'
+    }
+
     // 下 外边距 梯形
-    const bottomMarginPolygon:Polygon = {
+    const bottomMarginPolygon:PolygonData = {
       id: 4,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.bottomMarginFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         bottomPaddingPolygon.points[3],
         bottomPaddingPolygon.points[2],
@@ -172,12 +301,21 @@ export class SpacingPluginComponent implements OnInit {
       ]
     }
 
+    // 下 外边距 输入框
+    const bottomMarginInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${(width - (inputWidth + 8)) / 2}px`,
+      top: `${innerHeight + innerTop + topTrapezoiHeight + (topTrapezoiHeight - (inputHeight + 6)) / 2}px`,
+      value: 'bottomMargin'
+    }
+
     // 左 内边距 梯形
-    const leftPaddingPolygon:Polygon = {
+    const leftPaddingPolygon:PolygonData = {
       id: 5,
-      fill: 'blue',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.leftPaddingFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         topPaddingPolygon.points[0],
         centerPolygon.points[0],
@@ -186,13 +324,22 @@ export class SpacingPluginComponent implements OnInit {
         topPaddingPolygon.points[0],
       ]
     }
+
+    // 左 内边距 输入框
+    const leftPaddingInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${leftTrapezoiHeight + (leftTrapezoiHeight - (inputWidth + 8)) / 2}px`,
+      top: `${(height - (inputHeight + 6)) / 2}px`,
+      value: 'leftPadding'
+    }
     
     // 左 外边距 梯形
-    const leftMarginPolygon:Polygon = {
+    const leftMarginPolygon:PolygonData = {
       id: 6,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.leftMarginFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         topMarginPolygon.points[0],
         leftPaddingPolygon.points[0],
@@ -202,12 +349,21 @@ export class SpacingPluginComponent implements OnInit {
       ]
     }
 
+    // 左 外边距 输入框
+    const leftMarginInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${(leftTrapezoiHeight - (inputWidth + 8)) / 2}px`,
+      top: `${(height - (inputHeight + 6)) / 2}px`,
+      value: 'leftMargin'
+    }
+
     // 右 内边距 梯形
-    const rightPaddingPolygon:Polygon = {
+    const rightPaddingPolygon:PolygonData = {
       id: 7,
-      fill: 'blue',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.rightPaddingFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         centerPolygon.points[1],
         topPaddingPolygon.points[1],
@@ -217,12 +373,21 @@ export class SpacingPluginComponent implements OnInit {
       ]
     }
 
+    // 右 内边距 输入框
+    const rightPaddingInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${innerLeft + innerWidth + (leftTrapezoiHeight - (inputWidth + 8)) / 2}px`,
+      top: `${(height - (inputHeight + 6)) / 2}px`,
+      value: 'rightPadding'
+    }
+
     // 右 外边距 梯形
-    const rigthMarginPolygon:Polygon = {
+    const rigthMarginPolygon:PolygonData = {
       id: 8,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 1,
+      fill: polygonFill.rightMarginFill,
+      stroke: stroke,
+      strokeWidth: strokeWidth,
       points: [
         topMarginPolygon.points[2],
         topMarginPolygon.points[1],
@@ -232,10 +397,19 @@ export class SpacingPluginComponent implements OnInit {
       ]
     }
 
+    // 右 外边距 输入框
+    const rightMarginInput:InputData = {
+      width: `${inputWidth}px`,
+      height: `${inputHeight}px`,
+      left: `${innerLeft + innerWidth + leftTrapezoiHeight + (leftTrapezoiHeight - (inputWidth + 8)) / 2}px`,
+      top: `${(height - (inputHeight + 6)) / 2}px`,
+      value: 'rightMargin'
+    }
+
     this.svgData = {
       width: width,
       height: height,
-      items: [
+      polygons: [
         centerPolygon,
         topPaddingPolygon,
         topMarginPolygon,
@@ -245,28 +419,43 @@ export class SpacingPluginComponent implements OnInit {
         leftMarginPolygon,
         rightPaddingPolygon,
         rigthMarginPolygon
+      ],
+      inputs: [
+        topPaddingInput,
+        topMarginInput,
+        bottomPaddingInput,
+        bottomMarginInput,
+        leftPaddingInput,
+        leftMarginInput,
+        rightPaddingInput,
+        rightMarginInput
       ]
     }
   }
 
-  mouseenter(item: Polygon): void {
+  mouseenter(item: PolygonData): void {
     if (item.id === 0) return;
     this.tempNormalColor = item.fill;
-    item.fill = 'ghostwhite';
+    item.fill = this.highlightColor;
   }
 
-  mouseleave(item: Polygon): void {
+  mouseleave(item: PolygonData): void {
     if (item.id === 0) return;
     item.fill = this.tempNormalColor;
   }
 
-  mousedown(item: Polygon): void {
+  mousedown(item: PolygonData): void {
     if (item.id === 0) return;
-    item.fill = 'gainsboro';
+    item.fill = this.selectedColor;
   }
 
-  mouseup(item: Polygon): void {
+  mouseup(item: PolygonData): void {
     if (item.id === 0) return;
-    item.fill = 'ghostwhite';
+    item.fill = this.highlightColor;
+  }
+
+  reset(): void {
+    this.adjustData = JSON.parse(JSON.stringify(this.originalAdjustData));
+    this.adjustDataChange.emit(this.adjustData);
   }
 }

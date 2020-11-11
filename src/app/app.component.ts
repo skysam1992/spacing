@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { SpacesProperty } from './spacing-plugin/spacing-plugin.component'
 
 @Component({
   selector: 'app-root',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'SpacingPlugin';
-  testMargin = '0px 0px 0px 0px';
-  testPadding = '10px 10px 10px 10px';
-  OnInit(): void {
-
+  adjustData: SpacesProperty = {
+    topPadding: 10,
+    topMargin: 10,
+    bottomPadding: 10,
+    bottomMargin: 10,
+    leftPadding: 10,
+    leftMargin: 10,
+    rightPadding: 10,
+    rightMargin: 10
   }
 }
