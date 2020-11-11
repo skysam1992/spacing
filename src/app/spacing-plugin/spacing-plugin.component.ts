@@ -82,7 +82,7 @@ export class SpacingPluginComponent implements OnInit {
 
   ngAfterViewInit(): void {
     const divs: HTMLElement[] = this.elementRef.nativeElement.querySelectorAll('polygon');    
-    divs.forEach((div: any) => {
+    divs.forEach((div: HTMLElement) => {
       this.initDrag(div);
     });
   }
