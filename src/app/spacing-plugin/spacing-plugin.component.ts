@@ -97,74 +97,82 @@ export class SpacingPluginComponent implements OnInit {
           const {target, delta } = event;
           switch (target.id) {
             case 'spacing-polygon:1': // topPadding
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.y > 0) {
-                that.adjustData.topPadding += sensitivity;
+                that.adjustData.topPadding = Number(that.adjustData.topPadding) + sensitivity;
               } else {
                 if (that.adjustData.topPadding > 0) {
-                  that.adjustData.topPadding -= sensitivity;
+                  that.adjustData.topPadding = Number(that.adjustData.topPadding) - sensitivity;
                 }
               }
               break;
             case 'spacing-polygon:2': // topMargin
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.y > 0) {
-                that.adjustData.topMargin += sensitivity;
+                that.adjustData.topMargin = Number(that.adjustData.topMargin) + sensitivity;
               } else {
                 if (that.adjustData.topMargin > 0) {
-                  that.adjustData.topMargin -= sensitivity;
+                  that.adjustData.topMargin = Number(that.adjustData.topMargin) - sensitivity;
                 }
               }
               break;
             case 'spacing-polygon:3': // bottomPadding
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.y > 0) {
-                that.adjustData.bottomPadding += sensitivity;
+                that.adjustData.bottomPadding = Number(that.adjustData.bottomPadding) + sensitivity;
               } else {
                 if (that.adjustData.bottomPadding > 0) {
-                  that.adjustData.bottomPadding -= sensitivity;
+                  that.adjustData.bottomPadding = Number(that.adjustData.bottomPadding) - sensitivity;
                 }
               }
               break;
             case 'spacing-polygon:4': // bottomMargin
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.y > 0) {
-                that.adjustData.bottomMargin += sensitivity;
+                that.adjustData.bottomMargin = Number(that.adjustData.bottomMargin) + sensitivity;
               } else {
                 if (that.adjustData.bottomMargin > 0) {
-                  that.adjustData.bottomMargin -= sensitivity;
+                  that.adjustData.bottomMargin = Number(that.adjustData.bottomMargin) - sensitivity;
                 }
               }
               break;
             case 'spacing-polygon:5': // leftPadding
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.x > 0) {
-                that.adjustData.leftPadding += sensitivity;
+                that.adjustData.leftPadding = Number(that.adjustData.leftPadding) + sensitivity;
               } else {
                 if (that.adjustData.leftPadding > 0) {
-                  that.adjustData.leftPadding -= sensitivity;
+                  that.adjustData.leftPadding = Number(that.adjustData.leftPadding) - sensitivity;
                 }
               }
               break;
             case 'spacing-polygon:6': // leftMargin
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.x > 0) {
-                that.adjustData.leftMargin += sensitivity;
+                that.adjustData.leftMargin = Number(that.adjustData.leftMargin) + sensitivity;
               } else {
                 if (that.adjustData.leftMargin > 0) {
-                  that.adjustData.leftMargin -= sensitivity;
+                  that.adjustData.leftMargin = Number(that.adjustData.leftMargin) - sensitivity;
                 }
               }
               break;
             case 'spacing-polygon:7': // rightPadding
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.x > 0) {
-                that.adjustData.rightPadding += sensitivity;
+                that.adjustData.rightPadding = Number(that.adjustData.rightPadding) + sensitivity;
               } else {
                 if (that.adjustData.rightPadding > 0) {
-                  that.adjustData.rightPadding -= sensitivity;
+                  that.adjustData.rightPadding = Number(that.adjustData.rightPadding) - sensitivity;
                 }
               }
               break;
             case 'spacing-polygon:8': // rightMargin
+              // 输入框 输入完that.adjustData的值会变成字符串 这里需要转换一下
               if (delta.x > 0) {
-                that.adjustData.rightMargin += sensitivity;
+                that.adjustData.rightMargin = Number(that.adjustData.rightMargin) + sensitivity;
               } else {
                 if (that.adjustData.rightMargin > 0) {
-                  that.adjustData.rightMargin -= sensitivity;
+                  that.adjustData.rightMargin = Number(that.adjustData.rightMargin) - sensitivity;
                 }
               }
               break;
